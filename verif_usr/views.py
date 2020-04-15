@@ -73,6 +73,7 @@ def user_data_entry(request):
         password=body["password"],
         fav_gnr_writing=body["fav_gnr_writing"],
         )
+        send_mail('sub',"thank you for your response , you OTP is ",settings.EMAIL_HOST_USER ,[mail])
         return JsonResponse({'success': True})
 
 
