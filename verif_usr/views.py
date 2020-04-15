@@ -97,7 +97,7 @@ def send_email(request):
         body = json.loads(body_unicode)
         mail=body["email"]
         message=body["otp"]
-        send_mail('sub',message ,settings.EMAIL_HOST_USER ,[mail])
+        send_mail('sub',"thank you for your response , you OTP is {}".format(message),settings.EMAIL_HOST_USER ,[mail])
         return JsonResponse({"success":True})
         
 
