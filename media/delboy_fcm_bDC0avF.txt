@@ -1,0 +1,18 @@
+def fcm_token_save(request):
+    if request.method == 'POST':
+        today = datetime.today()
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        delboy_phone = body['delboy_phone']
+        try:
+            delboy=Delivery_Boys.objects.get(phone_no=delboy_phone)
+            delboy.delboy_fcm_token=body['delboy_fcm_token']
+            delboy.save()
+            return JsonResponse({
+                'response':"token save successful"
+            })
+        except:
+            return JsonResponse({
+                'response':"token save unsuccessful",
+                'error': "delboy dosent exist"
+            })

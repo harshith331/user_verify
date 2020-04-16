@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'verif_usr',
     'corsheaders',
-    'django_crontab',
 ]
 
 MIDDLEWARE = [
@@ -132,9 +131,6 @@ USE_TZ = True
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
-CRONJOBS = [
-    ('*/1 * * * *', 'scd.hi')
-]
 BROKER_TRANSPORT='redis'
 BROKER_URL = 'redis://localhost:6379'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'
