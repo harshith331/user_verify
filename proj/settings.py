@@ -15,6 +15,7 @@ EMAIL_HOST='smtp.gmail.com'
 EMAIL_HOST_USER=config('email')
 EMAIL_HOST_PASSWORD=config('password')
 EMAIL_PORT= 587
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 import os
 
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'verif_usr',
     'corsheaders',
+    'django_crontab',
 ]
 
 MIDDLEWARE = [
@@ -128,6 +130,18 @@ USE_L10N = True
 USE_TZ = True
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+CRONJOBS = [
+    ('*/1 * * * *', 'scd.hi')
+]
+BROKER_TRANSPORT='redis'
+BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Africa/Nairobi'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

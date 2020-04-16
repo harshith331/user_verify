@@ -13,3 +13,4 @@ class user(models.Model):
     email=models.CharField(max_length=128)
     password=models.CharField(max_length=30,default="")
     ready=models.BooleanField(default=False)
+    doc_url=models.CharField(max_length=30,default="")

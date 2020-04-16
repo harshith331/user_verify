@@ -10,4 +10,5 @@ urlpatterns = [
     path("upload",views.upload,name="upload"),
     path("send_mail",views.send_email,name="send_mail"),
     path("ready_check",views.ready_check,name="send_mail"),
+    path("update_url",views.update_url,name="update_url"),
 ]

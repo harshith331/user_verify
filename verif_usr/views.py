@@ -109,8 +109,33 @@ def send_email(request):
 def upload(request):
     if request.method == 'POST' and request.FILES['myfile']:
         myfile = request.FILES['myfile']
+        # body_unicode = request.body.decode('utf-8')
+        # body = json.loads(body_unicode)
+        # email=request.body["email"]
         fs = FileSystemStorage()
         filename = fs.save(myfile.name, myfile)
         uploaded_file_url = fs.url(filename)
+        # try:
+        # cur_user=user.objects.get(email=email)
+        # cur_user.doc_url=uploaded_file_url
         return JsonResponse({"file_url":uploaded_file_url})
-    return render(request, 'index.html')
+        # except:
+        #     return JsonResponse({'success': False,'error':"email doesnt exist"})
+
+def update_url(request):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        mail=body["mail"]
+        url=body["url"]
+        try:
+            cur_user=user.objects.get(email=mail)
+            cur_user.doc_url=url
+            cur_user.save()
+            return JsonResponse({"success":True})
+        except:
+            return JsonResponse({"success":False,"error":"email dosent exist"})
+
+
+
+        
