@@ -61,20 +61,24 @@ def user_data_entry(request):
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
-        user.objects.create(
-        email= body["email"] ,
-        first_name=body["first_name"],
-        last_name=body["last_name"],
-        date_of_birth=body["date_of_birth"],
-        country_of_residence=body["country_of_residence"],
-        state=body["first_name"],
-        city_of_residence=body["city_of_residence"],
-        phone_no=body["phone_no"],
-        password=body["password"],
-        fav_gnr_writing=body["fav_gnr_writing"],
-        )
-        send_mail('sub',"thank you for your response",settings.EMAIL_HOST_USER ,[body["email"]])
-        return JsonResponse({'success': True})
+        try:
+            cur_user=user.objects.get(email=body["email"])
+            return JsonResponse({'success': False,'error':"email already exists"})
+        except:
+            user.objects.create(
+            email= body["email"] ,
+            first_name=body["first_name"],
+            last_name=body["last_name"],
+            date_of_birth=body["date_of_birth"],
+            country_of_residence=body["country_of_residence"],
+            state=body["first_name"],
+            city_of_residence=body["city_of_residence"],
+            phone_no=body["phone_no"],
+            password=body["password"],
+            fav_gnr_writing=body["fav_gnr_writing"],
+            )
+            # send_mail('sub',"thank you for your response",settings.EMAIL_HOST_USER ,[body["email"]],fail_silently = False)
+            return JsonResponse({'success': True})
 
 
 def verif_email_pswd(request):
@@ -98,7 +102,7 @@ def send_email(request):
         body = json.loads(body_unicode)
         mail=body["email"]
         message=body["otp"]
-        send_mail('sub',"thank you for your response , you OTP is {}".format(message),settings.EMAIL_HOST_USER ,[mail])
+        # send_mail('sub',"thank you for your response , you OTP is {}".format(message),settings.EMAIL_HOST_USER ,[mail],fail_silently = False)
         return JsonResponse({"success":True})
         
 
