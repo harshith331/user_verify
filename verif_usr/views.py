@@ -29,16 +29,16 @@ def gen_otp(request):
         email= body["email"]
         try:
             cur_user=user.objects.get(email=email)
-            if cur_user.registered==True:
-                return JsonResponse({'success': False,'error':"email already exists"})
-            else:
-                otp=generateOTP()
-                cur_user.otp=otp
-                cur_user.save()
-                html_content = render_to_string('otp_mail.html', {'otp':otp}) 
-                text_content = strip_tags(html_content) # Strip the html tag. So people can see the pure text at least.
-                send_mail('VERIFICATION',text_content,settings.EMAIL_HOST_USER ,[email],fail_silently = False)
-                return JsonResponse({'success': True})
+            # if cur_user.registered==True:
+            return JsonResponse({'success': False,'error':"email already exists"})
+            # else:
+            #     otp=generateOTP()
+            #     cur_user.otp=otp
+            #     cur_user.save()
+            #     html_content = render_to_string('otp_mail.html', {'otp':otp}) 
+            #     text_content = strip_tags(html_content) # Strip the html tag. So people can see the pure text at least.
+            #     send_mail('VERIFICATION',text_content,settings.EMAIL_HOST_USER ,[email],fail_silently = False)
+            #     return JsonResponse({'success': True})
 
         except:
             otp=generateOTP()
@@ -81,13 +81,12 @@ def user_data_entry(request):
             cur_user.password=body["password"]
             cur_user.fav_gnr_writing=body["fav_gnr_writing"]
             cur_user.short_story=body["short_story"]
-            cur_user.registered=True
             cur_user.save()
 
-            html_content = render_to_string('reg.html') 
-            text_content = strip_tags(html_content) 
+            # html_content = render_to_string('reg.html') 
+            # text_content = strip_tags(html_content) 
 
-            send_mail('Successfully Registered',text_content,settings.EMAIL_HOST_USER ,[body["email"]],fail_silently = False)
+            # send_mail('Successfully Registered',text_content,settings.EMAIL_HOST_USER ,[body["email"]],fail_silently = False)
             return JsonResponse({'success': True})
         except:
             return JsonResponse({'success': False,"error":"user with this email dosent exist"})
@@ -155,13 +154,17 @@ def update_url(request):
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
-        mail=body["mail"]
+        mail=body["email"]
         url=body["url"]
         try:
             cur_user=user.objects.get(email=mail)
-            cur_user.doc_url=url
-            cur_user.save()
-            return JsonResponse({"success":True})
+            if cur_user.registered==True:
+                return JsonResponse({"success":False,"error":"File already uploaded"})
+            else:
+                cur_user.registered=True
+                cur_user.doc_url=url
+                cur_user.save()
+                return JsonResponse({"success":True})
         except:
             return JsonResponse({"success":False,"error":"email dosent exist"})
 
