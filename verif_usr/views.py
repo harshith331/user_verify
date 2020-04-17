@@ -6,6 +6,9 @@ from django.shortcuts import render
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 # Create your views here.
 
 
@@ -19,19 +22,64 @@ def generateOTP() :
 def index(request):
     return render(request, 'index.html')
 
-# def gen_otp(request):
-#     if request.method == 'POST':
-#         body_unicode = request.body.decode('utf-8')
-#         body = json.loads(body_unicode)
-#         email= body["email"]
-#         try:
-#             user.objects.get(email=email)
-#             return JsonResponse({'success': False,'error':"email already exists"})
-#         except:
-#             otp=generateOTP()
-#             print(type(otp))
-#             # user.objects.create(email=email,otp=otp)
-#             return JsonResponse({'success': True,'otp':otp})
+def gen_otp(request):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        email= body["email"]
+        try:
+            user.objects.get(email=email)
+            return JsonResponse({'success': False,'error':"email already exists"})
+        except:
+            otp=generateOTP()
+            user.objects.create(email=email,otp=otp)
+            html_content = render_to_string('otp_mail.html', {'otp':otp}) 
+            text_content = strip_tags(html_content) # Strip the html tag. So people can see the pure text at least.
+            send_mail('VERIFICATION',text_content,settings.EMAIL_HOST_USER ,[email],fail_silently = False)
+            return JsonResponse({'success': True,'otp':otp})
+
+def verif_email_otp(request):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        email= body["email"]
+        given_otp= body["otp"]
+        try:
+            cur_user=user.objects.get(email=email)
+            if cur_user.otp==given_otp:
+                return JsonResponse({'success': True,'verified':True})
+            else:
+                return JsonResponse({'success': False,'verified':False,'error':"OTP doesnt match"})
+        except:
+            return JsonResponse({'success': False,'error':"email doesnt exist"})
+
+def user_data_entry(request):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        mail=body["email"]
+        first_name=body["first_name"]
+        try:
+            cur_user=user.objects.get(email=mail)
+            cur_user.first_name=first_name
+            cur_user.last_name=body["last_name"]
+            cur_user.date_of_birth=body["date_of_birth"]
+            cur_user.country_of_residence=body["country_of_residence"]
+            cur_user.state=body["state"]
+            cur_user.city_of_residence=body["city_of_residence"]
+            cur_user.phone_no=body["phone_no"]
+            cur_user.password=body["password"]
+            cur_user.fav_gnr_writing=body["fav_gnr_writing"]
+            cur_user.short_story=body["short_story"]
+            cur_user.save()
+
+            html_content = render_to_string('reg.html') 
+            text_content = strip_tags(html_content) 
+
+            send_mail('Successfully Registered',text_content,settings.EMAIL_HOST_USER ,[body["email"]],fail_silently = False)
+            return JsonResponse({'success': True})
+        except:
+            return JsonResponse({'success': False,"error":"user with this email dosent exist"})
 
 def verif_email(request):
     if request.method == 'POST':
@@ -56,31 +104,6 @@ def ready_check(request):
         except:
             return JsonResponse({'success': False,'error':"email doesnt exist"})
 
-
-def user_data_entry(request):
-    if request.method == 'POST':
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-        try:
-            cur_user=user.objects.get(email=body["email"])
-            return JsonResponse({'success': False,'error':"email already exists"})
-        except:
-            user.objects.create(
-            email= body["email"] ,
-            first_name=body["first_name"],
-            last_name=body["last_name"],
-            date_of_birth=body["date_of_birth"],
-            country_of_residence=body["country_of_residence"],
-            state=body["first_name"],
-            city_of_residence=body["city_of_residence"],
-            phone_no=body["phone_no"],
-            password=body["password"],
-            fav_gnr_writing=body["fav_gnr_writing"],
-            )
-            # send_mail('sub',"thank you for your response",settings.EMAIL_HOST_USER ,[body["email"]],fail_silently = False)
-            return JsonResponse({'success': True})
-
-
 def verif_email_pswd(request):
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
@@ -103,7 +126,7 @@ def send_email(request):
         mail=body["email"]
         message=body["otp"]
         # try:
-        send_mail('sub',"thank you for your response , you OTP is {}".format(message),settings.EMAIL_HOST_USER ,[mail],fail_silently = False)
+        send_mail('VERIFICATION',"<p>Dear participant ,<br> OTP for your registration is .<br> {}</p>".format(message),settings.EMAIL_HOST_USER ,[mail],fail_silently = False)
         return JsonResponse({"success":True})
         # except:
         #     return JsonResponse({"success":False,"error":"mail cant't be sent"})
