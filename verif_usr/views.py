@@ -67,8 +67,10 @@ def user_data_entry(request):
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
         mail=body["email"]
-        first_name=body["first_name"]
         try:
+            cur_user=user.objects.get(email=mail)
+            return JsonResponse({'success': False,"error":"user already exists"})
+        except:
             cur_user=user.objects.get(email=mail)
             cur_user.first_name=first_name
             cur_user.last_name=body["last_name"]
@@ -81,25 +83,7 @@ def user_data_entry(request):
             cur_user.fav_gnr_writing=body["fav_gnr_writing"]
             cur_user.short_story=body["short_story"]
             cur_user.save()
-
-            # html_content = render_to_string('reg.html') 
-            # text_content = strip_tags(html_content) 
-
-            # send_mail('Successfully Registered',text_content,settings.EMAIL_HOST_USER ,[body["email"]],fail_silently = False)
             return JsonResponse({'success': True})
-        except:
-            return JsonResponse({'success': False,"error":"user with this email dosent exist"})
-
-# def verif_email(request):
-#     if request.method == 'POST':
-#         body_unicode = request.body.decode('utf-8')
-#         body = json.loads(body_unicode)
-#         email= body["email"]
-#         try:
-#             cur_user=user.objects.get(email=email)
-#             return JsonResponse({'success': True,'email_exists':True})
-#         except:
-#             return JsonResponse({'success': False,'error':"email doesnt exist"})
 
 def ready_check(request):
     if request.method == 'POST':
