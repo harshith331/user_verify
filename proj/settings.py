@@ -16,7 +16,6 @@ EMAIL_HOST_USER=config('email')
 EMAIL_HOST_PASSWORD=config('password')
 EMAIL_PORT= 587
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)

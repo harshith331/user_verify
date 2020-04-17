@@ -3,3 +3,5 @@
 */**/__pychache__/*
 db.sqlite3
 .env
+scd.py
+schedule_.py

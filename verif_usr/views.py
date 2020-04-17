@@ -102,9 +102,12 @@ def send_email(request):
         body = json.loads(body_unicode)
         mail=body["email"]
         message=body["otp"]
-        # send_mail('sub',"thank you for your response , you OTP is {}".format(message),settings.EMAIL_HOST_USER ,[mail],fail_silently = False)
+        # try:
+        send_mail('sub',"thank you for your response , you OTP is {}".format(message),settings.EMAIL_HOST_USER ,[mail],fail_silently = False)
         return JsonResponse({"success":True})
-        
+        # except:
+        #     return JsonResponse({"success":False,"error":"mail cant't be sent"})
+            
 
 def upload(request):
     if request.method == 'POST' and request.FILES['myfile']:
