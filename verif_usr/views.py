@@ -19,8 +19,8 @@ def generateOTP() :
         OTP += digits[math.floor(random.random() * 10)] 
   
     return OTP 
-def index(request):
-    return render(request, 'index.html')
+# def index(request):
+#     return render(request, 'index.html')
 
 def gen_otp(request):
     if request.method == 'POST':
@@ -36,7 +36,7 @@ def gen_otp(request):
             html_content = render_to_string('otp_mail.html', {'otp':otp}) 
             text_content = strip_tags(html_content) # Strip the html tag. So people can see the pure text at least.
             send_mail('VERIFICATION',text_content,settings.EMAIL_HOST_USER ,[email],fail_silently = False)
-            return JsonResponse({'success': True,'otp':otp})
+            return JsonResponse({'success': True})
 
 def verif_email_otp(request):
     if request.method == 'POST':
@@ -81,16 +81,16 @@ def user_data_entry(request):
         except:
             return JsonResponse({'success': False,"error":"user with this email dosent exist"})
 
-def verif_email(request):
-    if request.method == 'POST':
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-        email= body["email"]
-        try:
-            cur_user=user.objects.get(email=email)
-            return JsonResponse({'success': True,'email_exists':True})
-        except:
-            return JsonResponse({'success': False,'error':"email doesnt exist"})
+# def verif_email(request):
+#     if request.method == 'POST':
+#         body_unicode = request.body.decode('utf-8')
+#         body = json.loads(body_unicode)
+#         email= body["email"]
+#         try:
+#             cur_user=user.objects.get(email=email)
+#             return JsonResponse({'success': True,'email_exists':True})
+#         except:
+#             return JsonResponse({'success': False,'error':"email doesnt exist"})
 
 def ready_check(request):
     if request.method == 'POST':
@@ -119,34 +119,26 @@ def verif_email_pswd(request):
         except:
             return JsonResponse({'success': False,'error':"email doesnt exist"})
 
-def send_email(request):
-    if request.method == 'POST':
-        body_unicode = request.body.decode('utf-8')
-        body = json.loads(body_unicode)
-        mail=body["email"]
-        message=body["otp"]
-        # try:
-        send_mail('VERIFICATION',"<p>Dear participant ,<br> OTP for your registration is .<br> {}</p>".format(message),settings.EMAIL_HOST_USER ,[mail],fail_silently = False)
-        return JsonResponse({"success":True})
-        # except:
-        #     return JsonResponse({"success":False,"error":"mail cant't be sent"})
+# def send_email(request):
+#     if request.method == 'POST':
+#         body_unicode = request.body.decode('utf-8')
+#         body = json.loads(body_unicode)
+#         mail=body["email"]
+#         message=body["otp"]
+#         # try:
+#         send_mail('VERIFICATION',"<p>Dear participant ,<br> OTP for your registration is .<br> {}</p>".format(message),settings.EMAIL_HOST_USER ,[mail],fail_silently = False)
+#         return JsonResponse({"success":True})
+#         # except:
+#         #     return JsonResponse({"success":False,"error":"mail cant't be sent"})
             
 
 def upload(request):
     if request.method == 'POST' and request.FILES['myfile']:
         myfile = request.FILES['myfile']
-        # body_unicode = request.body.decode('utf-8')
-        # body = json.loads(body_unicode)
-        # email=request.body["email"]
         fs = FileSystemStorage()
         filename = fs.save(myfile.name, myfile)
         uploaded_file_url = fs.url(filename)
-        # try:
-        # cur_user=user.objects.get(email=email)
-        # cur_user.doc_url=uploaded_file_url
         return JsonResponse({"file_url":uploaded_file_url})
-        # except:
-        #     return JsonResponse({'success': False,'error':"email doesnt exist"})
 
 def update_url(request):
     if request.method == 'POST':
