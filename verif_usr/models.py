@@ -15,4 +15,5 @@ class user(models.Model):
     ready=models.BooleanField(default=False)
     doc_url=models.CharField(max_length=30,default="",blank=True,null=True)
     otp=models.CharField(max_length=30,default="",blank=True,null=True)
+    registered=models.BooleanField(default=False)
     short_story=models.TextField(default="")
