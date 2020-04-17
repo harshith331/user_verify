@@ -29,7 +29,6 @@ def gen_otp(request):
         email= body["email"]
         try:
             cur_user=user.objects.get(email=email)
-            # if cur_user.registered==True:
             return JsonResponse({'success': False,'error':"email already exists"})
             # else:
             #     otp=generateOTP()
@@ -43,9 +42,9 @@ def gen_otp(request):
         except:
             otp=generateOTP()
             user.objects.create(email=email,otp=otp)
-            html_content = render_to_string('otp_mail.html', {'otp':otp}) 
-            text_content = strip_tags(html_content) # Strip the html tag. So people can see the pure text at least.
-            send_mail('VERIFICATION',text_content,settings.EMAIL_HOST_USER ,[email],fail_silently = False)
+            # html_content = render_to_string('otp_mail.html', {'otp':otp}) 
+            # text_content = strip_tags(html_content) # Strip the html tag. So people can see the pure text at least.
+            # # send_mail('VERIFICATION',text_content,settings.EMAIL_HOST_USER ,[email],fail_silently = False)
             return JsonResponse({'success': True})
 
 def verif_email_otp(request):
