@@ -71,18 +71,19 @@ def user_data_entry(request):
             cur_user=user.objects.get(email=mail)
             return JsonResponse({'success': False,"error":"user already exists"})
         except:
-            cur_user=user.objects.get(email=mail)
-            cur_user.first_name=first_name
-            cur_user.last_name=body["last_name"]
-            cur_user.date_of_birth=body["date_of_birth"]
-            cur_user.country_of_residence=body["country_of_residence"]
-            cur_user.state=body["state"]
-            cur_user.city_of_residence=body["city_of_residence"]
-            cur_user.phone_no=body["phone_no"]
-            cur_user.password=body["password"]
-            cur_user.fav_gnr_writing=body["fav_gnr_writing"]
-            cur_user.short_story=body["short_story"]
-            cur_user.save()
+            user.objects.create(
+            email=mail,
+            first_name=body["first_name"],
+            last_name=body["last_name"],
+            date_of_birth=body["date_of_birth"],
+            country_of_residence=body["country_of_residence"],
+            state=body["state"],
+            city_of_residence=body["city_of_residence"],
+            phone_no=body["phone_no"],
+            password=body["password"],
+            fav_gnr_writing=body["fav_gnr_writing"],
+            short_story=body["short_story"],
+            )
             return JsonResponse({'success': True})
 
 def ready_check(request):
