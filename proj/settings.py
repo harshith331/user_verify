@@ -9,13 +9,13 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-from decouple import config
-EMAIL_USE_TLS= True
-EMAIL_HOST='smtp.gmail.com'
-EMAIL_HOST_USER=config('email')
-EMAIL_HOST_PASSWORD=config('password')
-EMAIL_PORT= 587
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# from decouple import config
+# EMAIL_USE_TLS= True
+# EMAIL_HOST='smtp.gmail.com'
+# EMAIL_HOST_USER=config('email')
+# EMAIL_HOST_PASSWORD=config('password')
+# EMAIL_PORT= 587
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
