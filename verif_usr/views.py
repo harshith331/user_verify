@@ -9,6 +9,7 @@ from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+import time
 # Create your views here.
 
 
@@ -44,6 +45,16 @@ def generateOTP() :
 #             # text_content = strip_tags(html_content) # Strip the html tag. So people can see the pure text at least.
 #             # # send_mail('VERIFICATION',text_content,settings.EMAIL_HOST_USER ,[email],fail_silently = False)
 #             return JsonResponse({'success': True})
+
+def wait(request):
+    if request.method == 'POST':
+        millis = int(round(time.time()))
+        millis_new=millis
+        while millis_new-millis < 30 :
+            millis_new = int(round(time.time()))
+        
+        return JsonResponse({"message":"wait time ended"})
+           
 
 def verif_email_otp(request):
     if request.method == 'POST':

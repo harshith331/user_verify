@@ -85,13 +85,27 @@ CORS_ORIGIN_ALLOW_ALL = True
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+# DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#             'NAME': 'dao3e7u6qitco7',
+#             'USER': 'brlchtydlzxoqw',
+#             'PASSWORD': '719cac9fc5235820bca21cdcc2e53ca1ed426f0ece265e444fd0f5cdee12225f',
+#             'HOST': 'ec2-52-71-55-81.compute-1.amazonaws.com',
+#             'PORT': '5432'
+#         }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'riya@gocoding',
+        'PASSWORD': '#Gocoding',
+        'HOST': 'gocoding.postgres.database.azure.com',
+        'PORT': '5432',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
